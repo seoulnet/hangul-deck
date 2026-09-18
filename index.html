@@ -1,0 +1,1352 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>한글 연습 · Hangul Study Deck</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="description" content="An offline Korean flashcard and spelling-practice deck" />
+<meta name="theme-color" content="#2f6b5e" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#191b18" media="(prefers-color-scheme: dark)" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-title" content="한글 연습" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<link rel="icon" href="./icons/icon-192.png" />
+<link rel="apple-touch-icon" href="./icons/apple-touch-icon-180.png" />
+<link rel="manifest" href="./manifest.webmanifest" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Noto+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" />
+
+<style>
+  :root {
+    --bg: #f6f2e9;
+    --surface: #fffefa;
+    --surface-2: #f1ecde;
+    --border: #e4decd;
+    --border-strong: #d3cab2;
+    --text: #24211c;
+    --text-dim: #6f6b5d;
+    --accent: #2f6b5e;
+    --accent-ink: #1f4c42;
+    --accent-weak: #e3ede8;
+    --good: #3f7d53;
+    --good-weak: #e2efe1;
+    --bad: #ad4835;
+    --bad-weak: #f4e3dd;
+    --gold: #b0823f;
+    --shadow: 0 18px 40px -24px rgba(31, 45, 40, 0.55);
+    --radius: 12px;
+    --font-sans: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans CJK KR", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-serif: "Nanum Myeongjo", "Apple SD Gothic Neo", "Malgun Gothic", "Noto Serif CJK KR", Georgia, "Times New Roman", serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
+  }
+  :root:not([data-theme="light"]) {
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #191b18;
+      --surface: #23261f;
+      --surface-2: #1f221c;
+      --border: #353a2f;
+      --border-strong: #454b3c;
+      --text: #ece8da;
+      --text-dim: #9c9a89;
+      --accent: #74c3ac;
+      --accent-ink: #a7dccb;
+      --accent-weak: #26352f;
+      --good: #82c090;
+      --good-weak: #26352b;
+      --bad: #e29079;
+      --bad-weak: #3a2b25;
+      --gold: #cc9c5c;
+      --shadow: 0 18px 44px -24px rgba(0, 0, 0, 0.7);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #191b18;
+    --surface: #23261f;
+    --surface-2: #1f221c;
+    --border: #353a2f;
+    --border-strong: #454b3c;
+    --text: #ece8da;
+    --text-dim: #9c9a89;
+    --accent: #74c3ac;
+    --accent-ink: #a7dccb;
+    --accent-weak: #26352f;
+    --good: #82c090;
+    --good-weak: #26352b;
+    --bad: #e29079;
+    --bad-weak: #3a2b25;
+    --gold: #cc9c5c;
+    --shadow: 0 18px 44px -24px rgba(0, 0, 0, 0.7);
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    line-height: 1.55;
+  }
+  img { max-width: 100%; }
+  [hidden] { display: none !important; }
+  .wrap {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 18px calc(96px + env(safe-area-inset-bottom));
+  }
+
+  header.top {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    margin: 0 -18px 22px;
+    padding: calc(14px + env(safe-area-inset-top)) 18px 0;
+  }
+  .brand {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .brand h1 {
+    font-family: var(--font-serif);
+    font-weight: 800;
+    font-size: 1.32rem;
+    margin: 0;
+    letter-spacing: 0.01em;
+  }
+  .brand .sub {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .brand .count {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--text-dim);
+  }
+  .brand .count b { color: var(--accent-ink); }
+
+  nav.tabs {
+    display: flex;
+    gap: 4px;
+    margin-top: 12px;
+  }
+  nav.tabs button {
+    appearance: none;
+    border: none;
+    background: none;
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-dim);
+    padding: 9px 14px 12px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    border-radius: 6px 6px 0 0;
+  }
+  nav.tabs button:hover { color: var(--text); }
+  nav.tabs button[aria-selected="true"] {
+    color: var(--accent-ink);
+    border-bottom-color: var(--accent);
+    background: var(--accent-weak);
+  }
+
+  .panel { display: none; }
+  .panel.active { display: block; animation: rise 0.25s ease; }
+  @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  .toolbar {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    font-size: 0.85rem;
+  }
+  .toolbar .spacer { flex: 1; }
+
+  button.btn {
+    appearance: none;
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+  }
+  button.btn:hover { border-color: var(--accent); }
+  button.btn.primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  :root[data-theme="dark"] button.btn.primary,
+  :root:not([data-theme="light"]) button.btn.primary { color: #16241f; }
+  button.btn.ghost { background: transparent; border-color: transparent; color: var(--text-dim); }
+  button.btn.ghost:hover { color: var(--text); background: var(--surface-2); }
+  button.btn:disabled { opacity: 0.4; cursor: default; }
+  button.btn:focus-visible, nav.tabs button:focus-visible, input:focus-visible, textarea:focus-visible, .key:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .seg {
+    display: inline-flex;
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .seg button {
+    appearance: none;
+    font: inherit;
+    font-size: 0.82rem;
+    padding: 7px 12px;
+    border: none;
+    background: var(--surface);
+    color: var(--text-dim);
+    cursor: pointer;
+  }
+  .seg button + button { border-left: 1px solid var(--border-strong); }
+  .seg button[aria-pressed="true"] { background: var(--accent-weak); color: var(--accent-ink); font-weight: 600; }
+
+  /* ---- Flashcard ---- */
+  .stage { perspective: 1400px; margin-bottom: 18px; }
+  .card {
+    position: relative;
+    width: 100%;
+    min-height: 260px;
+    border-radius: var(--radius);
+    transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+    transform-style: preserve-3d;
+    cursor: pointer;
+  }
+  .card.flipped { transform: rotateY(180deg); }
+  .face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 32px 24px;
+    gap: 12px;
+  }
+  .face.back { transform: rotateY(180deg); background: var(--surface-2); }
+  .face .tag {
+    position: absolute;
+    top: 14px;
+    left: 16px;
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .face .ko {
+    font-family: var(--font-serif);
+    font-size: 2.7rem;
+    font-weight: 700;
+    line-height: 1.2;
+    word-break: keep-all;
+  }
+  .face .en { font-size: 1.7rem; font-weight: 500; text-wrap: balance; }
+  .face .ro {
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    color: var(--gold);
+  }
+  .face .note { font-size: 0.9rem; color: var(--text-dim); max-width: 42ch; text-wrap: pretty; }
+  .face .hint { font-size: 0.78rem; color: var(--text-dim); letter-spacing: 0.04em; }
+
+  .grade { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .grade button {
+    appearance: none;
+    font: inherit;
+    font-weight: 600;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid var(--border-strong);
+    cursor: pointer;
+    background: var(--surface);
+    color: var(--text);
+  }
+  .grade button.again { border-color: color-mix(in srgb, var(--bad) 45%, var(--border-strong)); }
+  .grade button.again:hover { background: var(--bad-weak); }
+  .grade button.good { border-color: color-mix(in srgb, var(--good) 50%, var(--border-strong)); }
+  .grade button.good:hover { background: var(--good-weak); }
+  .grade button small { display: block; font-weight: 400; font-size: 0.72rem; color: var(--text-dim); }
+
+  .progressbar {
+    height: 5px;
+    background: var(--surface-2);
+    border-radius: 99px;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .progressbar span { display: block; height: 100%; background: var(--accent); transition: width 0.3s ease; }
+
+  .done {
+    text-align: center;
+    padding: 48px 20px;
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius);
+  }
+  .done h2 { font-family: var(--font-serif); margin: 0 0 6px; }
+
+  /* ---- Spelling ---- */
+  .prompt-card {
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    background: var(--surface);
+    padding: 26px 22px;
+    text-align: center;
+    margin-bottom: 14px;
+  }
+  .prompt-card .tag { font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim); }
+  .prompt-card .en { font-size: 1.9rem; font-weight: 500; margin-top: 6px; text-wrap: balance; }
+  .prompt-card .ro { font-family: var(--font-mono); font-size: 0.9rem; color: var(--gold); margin-top: 6px; min-height: 1.2em; }
+
+  .answer-field {
+    width: 100%;
+    font-family: var(--font-serif);
+    font-size: 1.9rem;
+    text-align: center;
+    padding: 14px 12px;
+    border: 1.5px solid var(--border-strong);
+    border-radius: 10px;
+    background: var(--surface);
+    color: var(--text);
+    letter-spacing: 0.02em;
+  }
+  .answer-field.ok { border-color: var(--good); background: var(--good-weak); }
+  .answer-field.no { border-color: var(--bad); background: var(--bad-weak); }
+
+  .verdict { min-height: 2.4em; margin: 12px 0; text-align: center; font-size: 0.95rem; }
+  .verdict .diff {
+    font-family: var(--font-serif);
+    font-size: 1.6rem;
+    letter-spacing: 0.03em;
+  }
+  .verdict .diff .c-ok { color: var(--good); }
+  .verdict .diff .c-no { color: var(--bad); text-decoration: underline wavy; }
+  .verdict .lbl { display: block; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-dim); margin-bottom: 2px; }
+
+  /* ---- On-screen keyboard ---- */
+  .kb {
+    margin-top: 14px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    user-select: none;
+  }
+  .kb-row { display: flex; gap: 6px; justify-content: center; }
+  .key {
+    flex: 1;
+    min-width: 0;
+    padding: 12px 0;
+    font-family: var(--font-serif);
+    font-size: 1.15rem;
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    text-align: center;
+  }
+  .key:active { background: var(--accent-weak); }
+  .key.wide { flex: 2.4; font-family: inherit; font-size: 0.8rem; letter-spacing: 0.08em; }
+  .key.mod { flex: 1.5; font-family: inherit; font-size: 0.8rem; }
+  .key.mod[aria-pressed="true"] { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* ---- Manage ---- */
+  .field { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+  .field label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); }
+  .field input, .field textarea, textarea.io {
+    font: inherit;
+    padding: 9px 11px;
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--text);
+    width: 100%;
+  }
+  .field input.ko-in { font-family: var(--font-serif); font-size: 1.15rem; }
+  textarea.io { font-family: var(--font-mono); font-size: 0.82rem; line-height: 1.5; min-height: 120px; resize: vertical; }
+
+  .add-box, .import-box {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface-2);
+    padding: 16px;
+    margin-bottom: 18px;
+  }
+  .add-box h3, .import-box h3 {
+    margin: 0 0 12px;
+    font-family: var(--font-serif);
+    font-size: 1rem;
+  }
+  details.import-box summary {
+    cursor: pointer;
+    font-family: var(--font-serif);
+    font-weight: 700;
+    list-style: none;
+  }
+  details.import-box summary::-webkit-details-marker { display: none; }
+  details.import-box[open] summary { margin-bottom: 12px; }
+
+  .card-list { display: flex; flex-direction: column; gap: 8px; }
+  .card-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 10px;
+    align-items: center;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: var(--surface);
+  }
+  .card-row .r-ko { font-family: var(--font-serif); font-size: 1.2rem; }
+  .card-row .r-en { color: var(--text-dim); font-size: 0.92rem; }
+  .card-row .r-act { display: flex; gap: 4px; }
+  .icon-btn {
+    appearance: none;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    border-radius: 7px;
+    width: 32px; height: 32px;
+    cursor: pointer;
+    color: var(--text-dim);
+    font-size: 0.9rem;
+  }
+  .icon-btn:hover { color: var(--text); border-color: var(--border-strong); }
+
+  .empty {
+    text-align: center;
+    color: var(--text-dim);
+    padding: 40px 20px;
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius);
+  }
+
+  .foot {
+    margin-top: 26px;
+    font-size: 0.76rem;
+    color: var(--text-dim);
+    text-align: center;
+    text-wrap: pretty;
+  }
+  .foot b { color: var(--text); font-weight: 600; }
+
+  @media (max-width: 460px) {
+    .face .ko { font-size: 2.2rem; }
+    .face .en { font-size: 1.4rem; }
+    .prompt-card .en { font-size: 1.5rem; }
+    .answer-field { font-size: 1.5rem; }
+    .card-row { grid-template-columns: 1fr auto; }
+    .card-row .r-en { grid-column: 1 / -1; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .card { transition: none; }
+    .panel.active { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <h1>한글 연습</h1>
+      <span class="sub">Hangul Study Deck</span>
+      <span class="count"><b id="deckCount">0</b> cards</span>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button role="tab" aria-selected="true" data-tab="study">Flashcards</button>
+      <button role="tab" aria-selected="false" data-tab="spell">Spelling</button>
+      <button role="tab" aria-selected="false" data-tab="manage">Manage deck</button>
+    </nav>
+  </header>
+
+  <!-- STUDY -->
+  <section class="panel active" id="panel-study" role="tabpanel">
+    <div class="toolbar">
+      <div class="seg" id="dirSeg" role="group" aria-label="Prompt direction">
+        <button data-dir="ko" aria-pressed="true">한글 → English</button>
+        <button data-dir="en" aria-pressed="false">English → 한글</button>
+      </div>
+      <div class="spacer"></div>
+      <button class="btn ghost" id="shuffleBtn">Shuffle</button>
+      <button class="btn ghost" id="restartBtn">Restart</button>
+    </div>
+    <div class="progressbar"><span id="studyProg" style="width:0%"></span></div>
+
+    <div id="studyLive">
+      <div class="stage">
+        <div class="card" id="flashCard">
+          <div class="face front">
+            <span class="tag" id="frontTag">한글</span>
+            <div id="frontMain"></div>
+            <div class="hint">tap card to flip</div>
+          </div>
+          <div class="face back">
+            <span class="tag" id="backTag">English</span>
+            <div id="backMain"></div>
+            <div class="ro" id="backRo"></div>
+            <div class="note" id="backNote"></div>
+          </div>
+        </div>
+      </div>
+      <div class="grade">
+        <button class="again" id="againBtn">Again<small>show it later this round</small></button>
+        <button class="good" id="goodBtn">Got it<small>remove from this round</small></button>
+      </div>
+    </div>
+
+    <div id="studyDone" class="done" hidden>
+      <h2>Round complete</h2>
+      <p id="doneStats" style="color:var(--text-dim)"></p>
+      <button class="btn primary" id="againRoundBtn">Study again</button>
+    </div>
+    <div id="studyEmpty" class="empty" hidden>
+      No cards yet. Open <b>Manage deck</b> to add some, or load a deck file.
+    </div>
+  </section>
+
+  <!-- SPELL -->
+  <section class="panel" id="panel-spell" role="tabpanel">
+    <div class="toolbar">
+      <label style="display:flex;align-items:center;gap:7px;cursor:pointer">
+        <input type="checkbox" id="kbToggle" />
+        On-screen 한글 keyboard
+      </label>
+      <div class="spacer"></div>
+      <button class="btn ghost" id="spellHintBtn">Hint</button>
+      <button class="btn ghost" id="spellSkip">Skip</button>
+    </div>
+    <div class="progressbar"><span id="spellProg" style="width:0%"></span></div>
+
+    <div id="spellLive">
+      <div class="prompt-card">
+        <span class="tag">Type the Korean for</span>
+        <div class="en" id="spellEn"></div>
+        <div class="ro" id="spellRo"></div>
+      </div>
+      <input class="answer-field" id="spellInput" autocomplete="off" autocapitalize="off"
+        autocorrect="off" spellcheck="false" placeholder="답을 입력하세요" aria-label="Your answer in Hangul" />
+      <div class="verdict" id="spellVerdict"></div>
+      <div class="grade" style="grid-template-columns:1fr">
+        <button class="good" id="spellCheck">Check answer</button>
+      </div>
+      <div class="kb" id="keyboard" hidden></div>
+    </div>
+
+    <div id="spellDone" class="done" hidden>
+      <h2>All done</h2>
+      <p id="spellStats" style="color:var(--text-dim)"></p>
+      <button class="btn primary" id="spellRestart">Practice again</button>
+    </div>
+    <div id="spellEmpty" class="empty" hidden>
+      No cards with Korean yet. Add some in <b>Manage deck</b>.
+    </div>
+  </section>
+
+  <!-- MANAGE -->
+  <section class="panel" id="panel-manage" role="tabpanel">
+    <div class="add-box">
+      <h3>Add a card</h3>
+      <div class="field">
+        <label for="inKo">Korean (한글)</label>
+        <input id="inKo" class="ko-in" placeholder="예: 사과" />
+      </div>
+      <div class="field">
+        <label for="inEn">English</label>
+        <input id="inEn" placeholder="e.g. apple" />
+      </div>
+      <div class="field">
+        <label for="inRo">Romanization — optional</label>
+        <input id="inRo" placeholder="e.g. sagwa" />
+      </div>
+      <div class="field">
+        <label for="inNote">Note — optional</label>
+        <input id="inNote" placeholder="context, example sentence, …" />
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="btn primary" id="addBtn">Add card</button>
+        <span id="addMsg" style="font-size:0.82rem;color:var(--text-dim)"></span>
+      </div>
+    </div>
+
+    <details class="import-box">
+      <summary>Bulk import from a list</summary>
+      <p style="font-size:0.82rem;color:var(--text-dim);margin-top:0">
+        One card per line. Put Korean and English on the same line separated by a tab, a dash, a comma, or a colon —
+        order doesn't matter, the Korean side is detected automatically. A third field becomes the romanization.
+      </p>
+      <textarea class="io" id="importText" placeholder="사과 - apple&#10;학교, school&#10;안녕하세요 : hello : annyeonghaseyo"></textarea>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn primary" id="importBtn">Import lines</button>
+        <span id="importMsg" style="font-size:0.82rem;color:var(--text-dim);align-self:center"></span>
+      </div>
+    </details>
+
+    <div class="toolbar">
+      <strong style="font-family:var(--font-serif)">Cards</strong>
+      <div class="spacer"></div>
+      <button class="btn ghost" id="saveFileBtn">Save to file</button>
+      <button class="btn ghost" id="loadFileBtn">Load from file</button>
+      <button class="btn ghost" id="exportBtn">Copy as text</button>
+    </div>
+    <input type="file" id="loadFileInput" accept="application/json,.json" hidden />
+    <div id="fileMsg" style="font-size:0.82rem;color:var(--text-dim);margin-bottom:8px"></div>
+    <textarea class="io" id="exportText" hidden readonly></textarea>
+    <div class="card-list" id="cardList"></div>
+    <div id="manageEmpty" class="empty" hidden>Your deck is empty. Add a card above.</div>
+  </section>
+
+  <div class="foot">
+    Runs entirely on this device — no account or internet needed.
+    Your deck and progress are saved in this browser; use
+    <b>Manage deck → Save / load file</b> to move a deck between devices.
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  // ---------- Hangul composition ----------
+  var CHO = ["ㄱ","ㄲ","ㄴ","ㄷ","ㄸ","ㄹ","ㅁ","ㅂ","ㅃ","ㅅ","ㅆ","ㅇ","ㅈ","ㅉ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"];
+  var JUNG = ["ㅏ","ㅐ","ㅑ","ㅒ","ㅓ","ㅔ","ㅕ","ㅖ","ㅗ","ㅘ","ㅙ","ㅚ","ㅛ","ㅜ","ㅝ","ㅞ","ㅟ","ㅠ","ㅡ","ㅢ","ㅣ"];
+  var JONG = ["","ㄱ","ㄲ","ㄳ","ㄴ","ㄵ","ㄶ","ㄷ","ㄹ","ㄺ","ㄻ","ㄼ","ㄽ","ㄾ","ㄿ","ㅀ","ㅁ","ㅂ","ㅄ","ㅅ","ㅆ","ㅇ","ㅈ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"];
+  var VC = { "ㅗ":{"ㅏ":"ㅘ","ㅐ":"ㅙ","ㅣ":"ㅚ"}, "ㅜ":{"ㅓ":"ㅝ","ㅔ":"ㅞ","ㅣ":"ㅟ"}, "ㅡ":{"ㅣ":"ㅢ"} };
+  var CC = { "ㄱ":{"ㅅ":"ㄳ"}, "ㄴ":{"ㅈ":"ㄵ","ㅎ":"ㄶ"}, "ㄹ":{"ㄱ":"ㄺ","ㅁ":"ㄻ","ㅂ":"ㄼ","ㅅ":"ㄽ","ㅌ":"ㄾ","ㅍ":"ㄿ","ㅎ":"ㅀ"}, "ㅂ":{"ㅅ":"ㅄ"} };
+  var CC_SPLIT = {};
+  Object.keys(CC).forEach(function (a) { Object.keys(CC[a]).forEach(function (b) { CC_SPLIT[CC[a][b]] = [a, b]; }); });
+  var VC_SPLIT = {};
+  Object.keys(VC).forEach(function (a) { Object.keys(VC[a]).forEach(function (b) { VC_SPLIT[VC[a][b]] = [a, b]; }); });
+
+  function isCho(c) { return CHO.indexOf(c) >= 0; }
+  function isJung(c) { return JUNG.indexOf(c) >= 0; }
+
+  // Build a display string from a flat list of compatibility jamo.
+  function buildHangul(js) {
+    var res = "";
+    var s = null; // { cho, jung, jong }
+    function emit() {
+      if (!s) return;
+      if (s.cho && s.jung) {
+        var ci = CHO.indexOf(s.cho), vi = JUNG.indexOf(s.jung), ji = s.jong ? JONG.indexOf(s.jong) : 0;
+        res += String.fromCharCode(0xAC00 + (ci * 21 + vi) * 28 + ji);
+      } else {
+        res += (s.cho || "") + (s.jung || "") + (s.jong || "");
+      }
+      s = null;
+    }
+    for (var i = 0; i < js.length; i++) {
+      var j = js[i];
+      if (j === " ") { emit(); res += " "; continue; }
+      var vow = isJung(j), cons = isCho(j) || JONG.indexOf(j) > 0;
+      if (vow) {
+        if (!s) { s = { cho: null, jung: j, jong: null }; }
+        else if (s.cho && !s.jung) { s.jung = j; }
+        else if (s.jong) {
+          var moving = s.jong, keep = null;
+          if (CC_SPLIT[s.jong]) { keep = CC_SPLIT[s.jong][0]; moving = CC_SPLIT[s.jong][1]; }
+          s.jong = keep; emit();
+          s = { cho: moving, jung: j, jong: null };
+        }
+        else if (s.jung) {
+          var comb = VC[s.jung] && VC[s.jung][j];
+          if (comb) { s.jung = comb; }
+          else { emit(); s = { cho: null, jung: j, jong: null }; }
+        }
+        else { emit(); s = { cho: null, jung: j, jong: null }; }
+      } else if (cons) {
+        if (!s) { s = { cho: j, jung: null, jong: null }; }
+        else if (!s.jung) { emit(); s = { cho: j, jung: null, jong: null }; }
+        else if (!s.jong) {
+          if (JONG.indexOf(j) > 0) { s.jong = j; }
+          else { emit(); s = { cho: j, jung: null, jong: null }; }
+        }
+        else {
+          var cc = CC[s.jong] && CC[s.jong][j];
+          if (cc) { s.jong = cc; }
+          else { emit(); s = { cho: j, jung: null, jong: null }; }
+        }
+      } else { emit(); res += j; }
+    }
+    emit();
+    return res;
+  }
+
+  function decomposeToJamos(str) {
+    var out = [];
+    for (var i = 0; i < str.length; i++) {
+      var ch = str[i], code = str.charCodeAt(i);
+      if (code >= 0xAC00 && code <= 0xD7A3) {
+        var sIdx = code - 0xAC00;
+        var ci = Math.floor(sIdx / 588), vi = Math.floor((sIdx % 588) / 28), ji = sIdx % 28;
+        out.push(CHO[ci]);
+        var jv = JUNG[vi];
+        if (VC_SPLIT[jv]) { out.push(VC_SPLIT[jv][0]); out.push(VC_SPLIT[jv][1]); } else { out.push(jv); }
+        if (ji > 0) {
+          var jc = JONG[ji];
+          if (CC_SPLIT[jc]) { out.push(CC_SPLIT[jc][0]); out.push(CC_SPLIT[jc][1]); } else { out.push(jc); }
+        }
+      } else { out.push(ch); }
+    }
+    return out;
+  }
+
+  var HANGUL_RE = /[ᄀ-ᇿ㄰-㆏가-힣]/;
+  function hasHangul(s) { return HANGUL_RE.test(s || ""); }
+  function norm(s) { return (s || "").normalize("NFC").replace(/\s+/g, " ").trim(); }
+
+  // ---------- storage ----------
+  var LS_DECK = "khf_deck_v1", LS_PROG = "khf_prog_v1", LS_PREFS = "khf_prefs_v1";
+  var STARTER = [
+    ["안녕하세요", "Hello (polite)", "annyeonghaseyo"],
+    ["감사합니다", "Thank you", "gamsahamnida"],
+    ["네", "Yes", "ne"],
+    ["아니요", "No", "aniyo"],
+    ["물", "Water", "mul"],
+    ["밥", "Rice / a meal", "bap"],
+    ["사람", "Person", "saram"],
+    ["학교", "School", "hakgyo"],
+    ["친구", "Friend", "chingu"],
+    ["사랑", "Love", "sarang"],
+    ["책", "Book", "chaek"],
+    ["집", "House / home", "jip"],
+    ["고양이", "Cat", "goyangi"],
+    ["개", "Dog", "gae"],
+    ["먹다", "To eat", "meokda"],
+    ["가다", "To go", "gada"],
+    ["알", "Egg", "al"],
+    ["불", "Fire", "bul"],
+    ["발", "Foot", "bal"],
+    ["응", "Yes (casual)", "eung"],
+    ["방", "Room", "bang"],
+    ["창", "Window", "chang"],
+    ["콩", "Beans", "kong"],
+    ["엄마", "Mom", "eomma"],
+    ["아빠", "Dad", "appa"],
+    ["곰", "Bear", "gom"],
+    ["힘", "Strength", "him"],
+    ["밤", "Night", "bam"],
+    ["춤", "Dance", "chum"],
+    ["안", "No / not", "an"],
+    ["눈", "Eyes", "nun"],
+    ["문", "Door", "mun"],
+    ["짠", "Cheers", "jjan"]
+  ];
+
+  function uid() { return "c" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+  function lsGet(k, d) { try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+
+  var state = {
+    cards: [],
+    prog: lsGet(LS_PROG, {}),
+    prefs: Object.assign({ tab: "study", dir: "ko", kb: null }, lsGet(LS_PREFS, {})),
+    updatedAt: 0
+  };
+
+  function savePrefs() { lsSet(LS_PREFS, state.prefs); }
+  function saveProg() { lsSet(LS_PROG, state.prog); }
+
+  function persistDeck() {
+    state.updatedAt = Date.now();
+    lsSet(LS_DECK, { cards: state.cards, updatedAt: state.updatedAt, v: 1 });
+  }
+
+  function loadLocalDeck() {
+    var d = lsGet(LS_DECK, null);
+    if (d && d.cards && d.cards.length) { state.cards = d.cards; state.updatedAt = d.updatedAt || 0; return true; }
+    return false;
+  }
+  function seedStarter() {
+    state.cards = STARTER.map(function (r) { return { id: uid(), ko: r[0], en: r[1], ro: r[2] || "", note: "" }; });
+    state.updatedAt = Date.now();
+  }
+
+  function initDeck() {
+    if (!loadLocalDeck()) { seedStarter(); persistDeck(); }
+    renderAll();
+  }
+
+  // ---------- tabs ----------
+  var tabButtons = Array.prototype.slice.call(document.querySelectorAll("nav.tabs button"));
+  function setTab(name) {
+    state.prefs.tab = name; savePrefs();
+    tabButtons.forEach(function (b) { b.setAttribute("aria-selected", b.dataset.tab === name ? "true" : "false"); });
+    ["study", "spell", "manage"].forEach(function (n) {
+      document.getElementById("panel-" + n).classList.toggle("active", n === name);
+    });
+    if (name === "study") startRound(false);
+    if (name === "spell") startSpell(false);
+    if (name === "manage") renderCardList();
+  }
+  tabButtons.forEach(function (b) { b.addEventListener("click", function () { setTab(b.dataset.tab); }); });
+
+  // ---------- flashcards ----------
+  var round = { queue: [], pos: 0, again: 0, good: 0, flipped: false };
+  var flashCard = document.getElementById("flashCard");
+
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+
+  function startRound(reshuffle) {
+    var ids = state.cards.map(function (c) { return c.id; });
+    if (reshuffle || round.queue.length === 0) {
+      round.queue = shuffle(ids.slice());
+    } else {
+      round.queue = round.queue.filter(function (id) { return ids.indexOf(id) >= 0; });
+      ids.forEach(function (id) { if (round.queue.indexOf(id) < 0) round.queue.push(id); });
+    }
+    round.pos = 0; round.again = 0; round.good = 0; round.flipped = false;
+    renderFlash();
+  }
+
+  function cardById(id) { for (var i = 0; i < state.cards.length; i++) if (state.cards[i].id === id) return state.cards[i]; return null; }
+
+  function renderFlash() {
+    var empty = state.cards.length === 0;
+    document.getElementById("studyEmpty").hidden = !empty;
+    document.getElementById("studyLive").hidden = empty || round.pos >= round.queue.length;
+    document.getElementById("studyDone").hidden = empty || round.pos < round.queue.length;
+    document.querySelector("#panel-study .grade").style.display = (empty || round.pos >= round.queue.length) ? "none" : "grid";
+
+    var total = round.queue.length;
+    document.getElementById("studyProg").style.width = total ? (Math.min(round.pos, total) / total * 100) + "%" : "0%";
+    if (empty) return;
+
+    if (round.pos >= round.queue.length) {
+      document.getElementById("doneStats").textContent =
+        "Got it: " + round.good + "  ·  Repeated: " + round.again + "  ·  " + total + " cards this round";
+      return;
+    }
+
+    var c = cardById(round.queue[round.pos]);
+    if (!c) { round.pos++; return renderFlash(); }
+    round.flipped = false;
+    flashCard.classList.remove("flipped");
+
+    var dir = state.prefs.dir;
+    var frontIsKo = dir === "ko";
+    document.getElementById("frontTag").textContent = frontIsKo ? "한글" : "English";
+    document.getElementById("backTag").textContent = frontIsKo ? "English" : "한글";
+    var koBlock = '<div class="ko">' + esc(c.ko) + '</div>';
+    var enBlock = '<div class="en">' + esc(c.en) + '</div>';
+    document.getElementById("frontMain").innerHTML = frontIsKo ? koBlock : enBlock;
+    document.getElementById("backMain").innerHTML = frontIsKo ? enBlock : koBlock;
+    document.getElementById("backRo").textContent = c.ro || "";
+    document.getElementById("backNote").textContent = c.note || "";
+  }
+
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (m) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[m]; }); }
+
+  function flip() { round.flipped = !round.flipped; flashCard.classList.toggle("flipped", round.flipped); }
+  flashCard.addEventListener("click", flip);
+  flashCard.addEventListener("keydown", function (e) { if (e.key === " " || e.key === "Enter") { e.preventDefault(); flip(); } });
+  flashCard.tabIndex = 0;
+  flashCard.setAttribute("role", "button");
+  flashCard.setAttribute("aria-label", "Flashcard, activate to flip");
+
+  function bump(id, key) {
+    if (!id) return;
+    var p = state.prog[id] || { seen: 0, right: 0, wrong: 0 };
+    p.seen++; if (key === "good") p.right++; else p.wrong++;
+    state.prog[id] = p; saveProg();
+  }
+
+  document.getElementById("goodBtn").addEventListener("click", function () {
+    if (round.pos >= round.queue.length) return;
+    bump(round.queue[round.pos], "good");
+    round.good++; round.pos++; renderFlash();
+  });
+  document.getElementById("againBtn").addEventListener("click", function () {
+    if (round.pos >= round.queue.length) return;
+    var id = round.queue[round.pos];
+    bump(id, "again");
+    round.again++;
+    round.queue.splice(round.pos, 1);
+    var insertAt = Math.min(round.pos + 5, round.queue.length);
+    round.queue.splice(insertAt, 0, id);
+    renderFlash();
+  });
+  document.getElementById("againRoundBtn").addEventListener("click", function () { startRound(true); });
+  document.getElementById("restartBtn").addEventListener("click", function () { startRound(true); });
+  document.getElementById("shuffleBtn").addEventListener("click", function () { startRound(true); });
+
+  document.getElementById("dirSeg").addEventListener("click", function (e) {
+    var b = e.target.closest("button"); if (!b) return;
+    state.prefs.dir = b.dataset.dir; savePrefs();
+    Array.prototype.forEach.call(this.children, function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+    renderFlash();
+  });
+
+  // ---------- spelling ----------
+  var spell = { queue: [], pos: 0, right: 0, total: 0, answered: false, jamos: [], hint: 0 };
+  var spellInput = document.getElementById("spellInput");
+  var keyboard = document.getElementById("keyboard");
+  var kbToggle = document.getElementById("kbToggle");
+
+  var isTouch = window.matchMedia && window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+  if (state.prefs.kb === null) state.prefs.kb = !isTouch; // default: on for desktop, off for phone/tablet
+
+  function spellPool() { return state.cards.filter(function (c) { return hasHangul(c.ko); }); }
+
+  function startSpell(reshuffle) {
+    var pool = spellPool();
+    document.getElementById("spellEmpty").hidden = pool.length !== 0;
+    document.getElementById("spellLive").hidden = pool.length === 0;
+    document.getElementById("spellDone").hidden = true;
+    if (pool.length === 0) return;
+    if (reshuffle || spell.queue.length === 0) spell.queue = shuffle(pool.map(function (c) { return c.id; }));
+    else spell.queue = spell.queue.filter(function (id) { var c = cardById(id); return c && hasHangul(c.ko); });
+    spell.pos = 0; spell.right = 0; spell.total = spell.queue.length;
+    nextSpell();
+  }
+
+  function nextSpell() {
+    spell.answered = false; spell.jamos = []; spell.hint = 0;
+    spellInput.value = "";
+    spellInput.classList.remove("ok", "no");
+    document.getElementById("spellVerdict").innerHTML = "";
+    document.getElementById("spellCheck").textContent = "Check answer";
+    var prog = spell.total ? (spell.pos / spell.total * 100) : 0;
+    document.getElementById("spellProg").style.width = prog + "%";
+
+    if (spell.pos >= spell.queue.length) {
+      document.getElementById("spellLive").hidden = true;
+      document.getElementById("spellDone").hidden = false;
+      document.getElementById("spellStats").textContent =
+        "Correct: " + spell.right + " / " + spell.total;
+      return;
+    }
+    var c = cardById(spell.queue[spell.pos]);
+    document.getElementById("spellEn").textContent = c.en;
+    document.getElementById("spellRo").textContent = "";
+    applyKbMode();
+    if (!state.prefs.kb) setTimeout(function () { spellInput.focus(); }, 30);
+  }
+
+  function currentSpellCard() { return cardById(spell.queue[spell.pos]); }
+
+  function checkSpell() {
+    var c = currentSpellCard(); if (!c) return;
+    if (spell.answered) { spell.pos++; nextSpell(); return; }
+    var want = norm(c.ko);
+    var got = norm(spellInput.value);
+    var ok = want === got;
+    spell.answered = true;
+    if (ok) spell.right++;
+    bump(c.id, ok ? "good" : "again");
+    spellInput.classList.add(ok ? "ok" : "no");
+
+    var v = document.getElementById("spellVerdict");
+    if (ok) {
+      v.innerHTML = '<div style="color:var(--good);font-weight:600">정답! Correct</div>' +
+        (c.ro ? '<div class="ro" style="color:var(--gold)">' + esc(c.ro) + '</div>' : "");
+    } else {
+      v.innerHTML =
+        '<span class="lbl">Correct answer</span>' +
+        '<div class="diff">' + diffMarkup(want, got) + '</div>' +
+        '<span class="lbl" style="margin-top:6px">You typed</span>' +
+        '<div class="diff" style="color:var(--text-dim)">' + (got ? esc(got) : "—") + '</div>' +
+        (c.ro ? '<div class="ro" style="color:var(--gold);margin-top:4px">' + esc(c.ro) + '</div>' : "");
+    }
+    document.getElementById("spellCheck").textContent = "Next card →";
+    document.getElementById("spellProg").style.width = ((spell.pos + 1) / spell.total * 100) + "%";
+  }
+
+  function diffMarkup(want, got) {
+    var out = "";
+    for (var i = 0; i < want.length; i++) {
+      var w = want[i];
+      var cls = got[i] === w ? "c-ok" : "c-no";
+      out += '<span class="' + cls + '">' + esc(w) + "</span>";
+    }
+    return out;
+  }
+
+  document.getElementById("spellCheck").addEventListener("click", checkSpell);
+  spellInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") { e.preventDefault(); checkSpell(); }
+  });
+  document.getElementById("spellSkip").addEventListener("click", function () {
+    if (!spell.answered) bump(currentSpellCard() && currentSpellCard().id, "again");
+    spell.pos++; nextSpell();
+  });
+  document.getElementById("spellHintBtn").addEventListener("click", function () {
+    var c = currentSpellCard(); if (!c) return;
+    spell.hint++;
+    var ro = c.ro ? c.ro : "";
+    var reveal = c.ko.slice(0, Math.min(spell.hint, c.ko.length));
+    document.getElementById("spellRo").textContent =
+      (ro ? ro + "   ·   " : "") + reveal + "…";
+  });
+  document.getElementById("spellRestart").addEventListener("click", function () { startSpell(true); });
+
+  // ---------- on-screen keyboard ----------
+  var KB_ROWS = [
+    ["ㅂ","ㅈ","ㄷ","ㄱ","ㅅ","ㅛ","ㅕ","ㅑ","ㅐ","ㅔ"],
+    ["ㅁ","ㄴ","ㅇ","ㄹ","ㅎ","ㅗ","ㅓ","ㅏ","ㅣ"],
+    ["ㅋ","ㅌ","ㅊ","ㅍ","ㅠ","ㅜ","ㅡ"]
+  ];
+  var KB_SHIFT = { "ㅂ":"ㅃ","ㅈ":"ㅉ","ㄷ":"ㄸ","ㄱ":"ㄲ","ㅅ":"ㅆ","ㅐ":"ㅒ","ㅔ":"ㅖ" };
+  var shifted = false;
+
+  function buildKeyboard() {
+    keyboard.innerHTML = "";
+    KB_ROWS.forEach(function (row, ri) {
+      var r = document.createElement("div"); r.className = "kb-row";
+      if (ri === 2) {
+        var sh = keyEl("⇧", "mod");
+        sh.id = "kbShift";
+        sh.setAttribute("aria-pressed", shifted ? "true" : "false");
+        sh.addEventListener("click", function () { shifted = !shifted; buildKeyboard(); });
+        r.appendChild(sh);
+      }
+      row.forEach(function (k) {
+        var label = shifted && KB_SHIFT[k] ? KB_SHIFT[k] : k;
+        var el = keyEl(label, "");
+        el.addEventListener("click", function () { pressJamo(label); if (shifted) { shifted = false; buildKeyboard(); } });
+        r.appendChild(el);
+      });
+      if (ri === 2) {
+        var bk = keyEl("⌫", "mod");
+        bk.addEventListener("click", backspaceJamo);
+        r.appendChild(bk);
+      }
+      keyboard.appendChild(r);
+    });
+    var last = document.createElement("div"); last.className = "kb-row";
+    var space = keyEl("space", "wide");
+    space.addEventListener("click", function () { pressJamo(" "); });
+    var clr = keyEl("clear", "mod");
+    clr.addEventListener("click", function () { spell.jamos = []; syncFromJamos(); });
+    last.appendChild(clr); last.appendChild(space);
+    keyboard.appendChild(last);
+  }
+  function keyEl(txt, cls) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "key" + (cls ? " " + cls : "");
+    b.textContent = txt;
+    return b;
+  }
+  function pressJamo(j) { spell.jamos.push(j); syncFromJamos(); }
+  function backspaceJamo() { spell.jamos.pop(); syncFromJamos(); }
+  function syncFromJamos() { spellInput.value = buildHangul(spell.jamos); }
+
+  function applyKbMode() {
+    var on = !!state.prefs.kb;
+    kbToggle.checked = on;
+    keyboard.hidden = !on;
+    spellInput.readOnly = on;
+    if (on) {
+      spellInput.blur();
+      spell.jamos = decomposeToJamos(spellInput.value);
+      buildKeyboard();
+    }
+  }
+  kbToggle.addEventListener("change", function () {
+    state.prefs.kb = kbToggle.checked; savePrefs();
+    applyKbMode();
+    if (!state.prefs.kb) spellInput.focus();
+  });
+
+  // ---------- manage ----------
+  function dupKey(ko, en) {
+    ko = norm(ko).toLowerCase();
+    if (ko) return "ko:" + ko;
+    return "en:" + (en || "").trim().toLowerCase();
+  }
+  function findDuplicate(ko, en, exceptId) {
+    var k = dupKey(ko, en);
+    for (var i = 0; i < state.cards.length; i++) {
+      var c = state.cards[i];
+      if (exceptId && c.id === exceptId) continue;
+      if (dupKey(c.ko, c.en) === k) return c;
+    }
+    return null;
+  }
+  function addCard(ko, en, ro, note) {
+    ko = norm(ko); en = (en || "").trim();
+    if (!ko && !en) return false;
+    if (findDuplicate(ko, en)) return false;
+    state.cards.push({ id: uid(), ko: ko, en: en, ro: (ro || "").trim(), note: (note || "").trim() });
+    persistDeck(); renderAll();
+    return true;
+  }
+
+  document.getElementById("addBtn").addEventListener("click", function () {
+    var ko = document.getElementById("inKo").value;
+    var en = document.getElementById("inEn").value;
+    var ro = document.getElementById("inRo").value;
+    var note = document.getElementById("inNote").value;
+    var msg = document.getElementById("addMsg");
+    if (!norm(ko) && !en.trim()) { msg.textContent = "Enter Korean or English first."; return; }
+    var dup = findDuplicate(ko, en);
+    if (dup) {
+      msg.style.color = "var(--bad)";
+      msg.textContent = "Already in your deck: " + (dup.ko || dup.en) + (dup.en && dup.ko ? " (" + dup.en + ")" : "");
+      return;
+    }
+    addCard(ko, en, ro, note);
+    msg.style.color = "var(--good)";
+    msg.textContent = "Added.";
+    setTimeout(function () { if (msg.textContent === "Added.") msg.textContent = ""; }, 2000);
+    ["inKo", "inEn", "inRo", "inNote"].forEach(function (id) { document.getElementById(id).value = ""; });
+    document.getElementById("inKo").focus();
+  });
+
+  function parseImport(text) {
+    var lines = text.split(/\r?\n/), added = 0, skipped = 0;
+    var seen = {};
+    state.cards.forEach(function (c) { seen[dupKey(c.ko, c.en)] = true; });
+    lines.forEach(function (line) {
+      var raw = line.trim();
+      if (!raw) return;
+      var parts;
+      if (raw.indexOf("\t") >= 0) parts = raw.split(/\t+/);
+      else parts = raw.split(/\s*[–—\-\|:;,]\s*/);
+      parts = parts.map(function (p) { return p.trim(); }).filter(Boolean);
+      if (parts.length === 1) {
+        var m = raw.match(/^(.*?[가-힣㄰-㆏])\s+([A-Za-z].*)$/);
+        if (m) parts = [m[1].trim(), m[2].trim()];
+      }
+      if (!parts.length) return;
+      var ko = "", en = "", ro = "";
+      parts.forEach(function (p) {
+        if (!ko && hasHangul(p)) ko = p;
+        else if (!en && !hasHangul(p) && /[A-Za-z]/.test(p)) en = p;
+        else if (!ro && !hasHangul(p)) ro = p;
+      });
+      if (!ko && parts[0]) ko = parts[0];
+      if (!en && parts[1]) en = parts[1];
+      if (ko || en) {
+        var k = dupKey(ko, en);
+        if (seen[k]) { skipped++; return; }
+        seen[k] = true;
+        state.cards.push({ id: uid(), ko: norm(ko), en: en, ro: ro, note: "" });
+        added++;
+      }
+    });
+    if (added) { persistDeck(); renderAll(); }
+    return { added: added, skipped: skipped };
+  }
+
+  document.getElementById("importBtn").addEventListener("click", function () {
+    var r = parseImport(document.getElementById("importText").value);
+    var parts = [];
+    if (r.added) parts.push("Added " + r.added + " card" + (r.added === 1 ? "" : "s"));
+    if (r.skipped) parts.push("skipped " + r.skipped + " duplicate" + (r.skipped === 1 ? "" : "s"));
+    document.getElementById("importMsg").textContent =
+      parts.length ? parts.join(" · ") : "Nothing recognised — check the separators";
+    if (r.added) document.getElementById("importText").value = "";
+  });
+
+  // ---- file save / load ----
+  function currentPayload() {
+    return { app: "hangul-study-deck", v: 1, exportedAt: new Date().toISOString(), cards: state.cards };
+  }
+  document.getElementById("saveFileBtn").addEventListener("click", function () {
+    var msg = document.getElementById("fileMsg");
+    try {
+      var blob = new Blob([JSON.stringify(currentPayload(), null, 2)], { type: "application/json" });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      var stamp = new Date().toISOString().slice(0, 10);
+      a.href = url;
+      a.download = "hangul-deck-" + stamp + ".json";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
+      msg.style.color = "var(--text-dim)";
+      msg.textContent = "Saved " + state.cards.length + " cards to a .json file.";
+    } catch (e) {
+      msg.style.color = "var(--bad)";
+      msg.textContent = "Couldn't save a file here — use “Copy as text” instead.";
+    }
+  });
+
+  document.getElementById("loadFileBtn").addEventListener("click", function () {
+    document.getElementById("loadFileInput").click();
+  });
+  document.getElementById("loadFileInput").addEventListener("change", function (e) {
+    var f = e.target.files && e.target.files[0];
+    e.target.value = "";
+    if (!f) return;
+    var msg = document.getElementById("fileMsg");
+    var rd = new FileReader();
+    rd.onload = function () {
+      var incoming = null;
+      try {
+        var parsed = JSON.parse(rd.result);
+        incoming = Array.isArray(parsed) ? parsed : parsed && parsed.cards;
+      } catch (err) { incoming = null; }
+      if (!incoming || !incoming.length) {
+        msg.style.color = "var(--bad)";
+        msg.textContent = "Couldn't read a deck from that file.";
+        return;
+      }
+      var seen = {};
+      state.cards.forEach(function (c) { seen[dupKey(c.ko, c.en)] = true; });
+      var added = 0, skipped = 0;
+      incoming.forEach(function (c) {
+        if (!c) return;
+        var ko = norm(c.ko || ""), en = (c.en || "").trim();
+        if (!ko && !en) return;
+        var k = dupKey(ko, en);
+        if (seen[k]) { skipped++; return; }
+        seen[k] = true;
+        state.cards.push({ id: uid(), ko: ko, en: en, ro: (c.ro || "").trim(), note: (c.note || "").trim() });
+        added++;
+      });
+      if (added) persistDeck();
+      renderAll();
+      msg.style.color = "var(--good)";
+      msg.textContent = "Merged " + added + " new card" + (added === 1 ? "" : "s") +
+        (skipped ? ", skipped " + skipped + " already in your deck" : "") + ".";
+    };
+    rd.readAsText(f);
+  });
+
+  document.getElementById("exportBtn").addEventListener("click", function () {
+    var ta = document.getElementById("exportText");
+    ta.hidden = !ta.hidden;
+    if (!ta.hidden) {
+      ta.value = state.cards.map(function (c) {
+        return [c.ko, c.en].concat(c.ro ? [c.ro] : []).join(" - ");
+      }).join("\n") + "\n\n--- JSON backup ---\n" + JSON.stringify(currentPayload());
+      ta.focus(); ta.select();
+    }
+  });
+
+  var cardList = document.getElementById("cardList");
+  function renderCardList() {
+    var empty = state.cards.length === 0;
+    document.getElementById("manageEmpty").hidden = !empty;
+    cardList.innerHTML = "";
+    state.cards.slice().reverse().forEach(function (c) {
+      var row = document.createElement("div");
+      row.className = "card-row";
+      row.innerHTML =
+        '<div class="r-ko"></div><div class="r-en"></div>' +
+        '<div class="r-act">' +
+        '<button class="icon-btn" data-act="edit" title="Edit">✎</button>' +
+        '<button class="icon-btn" data-act="del" title="Delete">✕</button>' +
+        '</div>';
+      row.querySelector(".r-ko").textContent = c.ko || "—";
+      row.querySelector(".r-en").textContent = c.en + (c.ro ? "  ·  " + c.ro : "");
+      row.querySelector('[data-act="del"]').addEventListener("click", function () {
+        state.cards = state.cards.filter(function (x) { return x.id !== c.id; });
+        persistDeck(); renderAll();
+      });
+      row.querySelector('[data-act="edit"]').addEventListener("click", function () { editRow(row, c); });
+      cardList.appendChild(row);
+    });
+  }
+
+  function editRow(row, c) {
+    row.innerHTML = "";
+    row.style.gridTemplateColumns = "1fr";
+    var mk = function (val, ph, cls) {
+      var i = document.createElement("input");
+      i.value = val || ""; i.placeholder = ph; if (cls) i.className = cls;
+      i.style.marginBottom = "6px";
+      i.style.font = "inherit"; i.style.padding = "8px 10px";
+      i.style.border = "1px solid var(--border-strong)"; i.style.borderRadius = "7px";
+      i.style.background = "var(--surface)"; i.style.color = "var(--text)"; i.style.width = "100%";
+      return i;
+    };
+    var ko = mk(c.ko, "한글", "ko-in"); ko.style.fontFamily = "var(--font-serif)"; ko.style.fontSize = "1.15rem";
+    var en = mk(c.en, "English");
+    var ro = mk(c.ro, "romanization");
+    var note = mk(c.note, "note");
+    var bar = document.createElement("div");
+    bar.style.display = "flex"; bar.style.gap = "6px";
+    var save = document.createElement("button"); save.className = "btn primary"; save.textContent = "Save";
+    var cancel = document.createElement("button"); cancel.className = "btn ghost"; cancel.textContent = "Cancel";
+    bar.appendChild(save); bar.appendChild(cancel);
+    [ko, en, ro, note, bar].forEach(function (el) { row.appendChild(el); });
+    save.addEventListener("click", function () {
+      var dup = findDuplicate(ko.value, en.value, c.id);
+      if (dup) { save.textContent = "Duplicate of " + (dup.ko || dup.en); return; }
+      c.ko = norm(ko.value); c.en = en.value.trim(); c.ro = ro.value.trim(); c.note = note.value.trim();
+      persistDeck(); renderAll();
+    });
+    cancel.addEventListener("click", renderCardList);
+    ko.focus();
+  }
+
+  // ---------- render orchestration ----------
+  function renderAll() {
+    document.getElementById("deckCount").textContent = state.cards.length;
+    if (state.prefs.tab === "study") renderFlashSafe();
+    if (state.prefs.tab === "spell") refreshSpellAvailability();
+    renderCardList();
+  }
+  function renderFlashSafe() {
+    var ids = state.cards.map(function (c) { return c.id; });
+    round.queue = round.queue.filter(function (id) { return ids.indexOf(id) >= 0; });
+    ids.forEach(function (id) { if (round.queue.indexOf(id) < 0) round.queue.push(id); });
+    if (round.pos > round.queue.length) round.pos = round.queue.length;
+    renderFlash();
+  }
+  function refreshSpellAvailability() {
+    var pool = spellPool();
+    document.getElementById("spellEmpty").hidden = pool.length !== 0;
+    if (pool.length && document.getElementById("spellLive").hidden && document.getElementById("spellDone").hidden) {
+      startSpell(true);
+    }
+  }
+
+  // ---------- go ----------
+  document.getElementById("dirSeg").querySelectorAll("button").forEach(function (b) {
+    b.setAttribute("aria-pressed", b.dataset.dir === state.prefs.dir ? "true" : "false");
+  });
+  initDeck();
+  setTab(state.prefs.tab || "study");
+})();
+</script>
+<script>
+  // Register the service worker only when served over http(s) — the same
+  // file still works when opened directly from disk (file://), just without
+  // offline caching.
+  if ("serviceWorker" in navigator && location.protocol.indexOf("http") === 0) {
+    window.addEventListener("load", function () {
+      navigator.serviceWorker.register("./sw.js").catch(function () {});
+    });
+  }
+</script>
+</body>
+</html>
